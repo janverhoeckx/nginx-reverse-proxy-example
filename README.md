@@ -1,10 +1,26 @@
 # NGINX reverse proxy docker compose example
-This project contains a docker-compose file for a NGINX reverse proxy with automatic Lets encrypt SSL certificate 
-generation. See the [nginx-proxy README](https://github.com/nginx-proxy/nginx-proxy) for more information about the 
-reverse proxy and the [acme-companion README](https://github.com/nginx-proxy/acme-companion) for more information about 
-certificate generation.
+This project contains a docker-compose file for a NGINX reverse proxy with automatic Lets Encrypt SSL certificate 
+generation.
 
 Based on: [nginx-proxy](https://github.com/nginx-proxy/nginx-proxy) and [acme-companion](https://github.com/nginx-proxy/acme-companion).
+
+## How it works
+The `nginx-proxy` container acts as a [reverse proxy](https://en.wikipedia.org/wiki/Reverse_proxy) to redirect traffic to
+the destination application container based on DNS name. It also provides Lets Encrypt SSL certificates 
+to enable HTTPS.
+
+The `nginx-proxy` container will be automatically configured via [docker-gen](https://github.com/nginx-proxy/docker-gen). 
+The `docker-gen` application (included in the `nginx-proxy` container) listens to the docker socket. When a new container
+is started, it wil generate an SSL certificate with the `acme-companion` container, and generate the config for the `nginx-proxy` container. 
+The config will be installed in the `nginx-proxy` container via shared volumes. 
+
+When the expiration date of a certificate is due, the `acme-companion` container automatically renews the certificate.
+
+See the [nginx-proxy README](https://github.com/nginx-proxy/nginx-proxy) for more information about the
+reverse proxy and the [acme-companion README](https://github.com/nginx-proxy/acme-companion) for more information about
+certificate generation.
+
+![Overview](schema.png)
 
 ## How to run
 1. Create a docker network "webproxy": `docker network create webproxy`
