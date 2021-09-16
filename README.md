@@ -20,7 +20,7 @@ See the [nginx-proxy README](https://github.com/nginx-proxy/nginx-proxy) for mor
 reverse proxy and the [acme-companion README](https://github.com/nginx-proxy/acme-companion) for more information about
 certificate generation.
 
-![Overview](schema.png)
+![Overview](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/janverhoeckx/nginx-reverse-proxy-example/main/schema.puml)
 
 ## How to run
 1. Create a docker network "webproxy": `docker network create webproxy`

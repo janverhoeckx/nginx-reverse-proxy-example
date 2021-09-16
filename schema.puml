@@ -1,0 +1,31 @@
+@startuml
+'https://plantuml.com/deployment-diagram
+!theme amiga
+
+actor actor
+node nginx_proxy
+node docker_gen
+node acme_companion
+node app1
+node app2
+node app3
+agent docker_socket
+cloud lets_encrypt
+
+actor --> nginx_proxy : http/https
+nginx_proxy --> app1 : http
+nginx_proxy --> app2 : http
+nginx_proxy --> app3 : http
+docker_gen -l-> nginx_proxy : updates config
+docker_gen -r-> docker_socket : listen to
+docker_gen --> acme_companion : generates SSL certificated with
+acme_companion --> lets_encrypt : https
+lets_encrypt --> nginx_proxy : http
+
+note "Updates NGINX vhost configuration when new \n container is detected by listening to the \n docker socket" as docker_gen_note
+docker_gen .u. docker_gen_note
+note "Distribute requests based \n on hostname (DNS)" as nginx_proxy_note
+nginx_proxy .l. nginx_proxy_note
+note "[[https://letsencrypt.org/docs/challenge-types/ Performs ACME challenge]]" as acme_companion_note
+acme_companion .. acme_companion_note
+@enduml
